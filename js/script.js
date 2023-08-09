@@ -114,48 +114,46 @@ function displayModalView(imageSrc, heroname, comics, stories, series, descripti
   const modalSeries = document.querySelector("#modalSeries-span");
   const modalDescription = document.querySelector("#modalDescription-span");
 
-
   const parentElement = document.getElementById("dialog");
 
-  // Check if the favourite and remove elements already exist
   const existingFavourite = parentElement.querySelector(".favHero");
   const existingRemove = parentElement.querySelector(".removeHero");
-  
-  // If the favourite element does not exist, create and append it
+
   if (!existingFavourite) {
     const favourite = document.createElement("button");
     favourite.textContent = "Favourite";
     favourite.classList.add("favHero");
-    favourite.addEventListener("click",function(){
-      addToFavorites(imageSrc,heroname,comics,stories,series,description)
+    favourite.addEventListener("click", function () {
+      addToFavorites(imageSrc, heroname, comics, stories, series, description);
     });
     parentElement.appendChild(favourite);
   }
-  
-  // If the remove element does not exist, create and append it
+
   if (!existingRemove) {
     const remove = document.createElement("button");
-    remove.textContent = "Remove"
+    remove.textContent = "Remove";
     remove.classList.add("removeHero");
+    remove.addEventListener("click", function () {
+      removeFromFavorites(heroname);
+    });
     parentElement.appendChild(remove);
   }
-  
-    modalImageElement.src = imageSrc;
-    modalName.textContent = heroname;
-    modalComics.textContent =  comics;
-    modalStories.textContent = stories;
-    modalSeries.textContent =  series;
-    if (description) {
-      modalDescription.textContent = description;
-    } else {
-      modalDescription.textContent = "No description!";
-    }
+
+  modalImageElement.src = imageSrc;
+  modalName.textContent = heroname;
+  modalComics.textContent = comics;
+  modalStories.textContent = stories;
+  modalSeries.textContent = series;
+  if (description) {
+    modalDescription.textContent = description;
+  } else {
+    modalDescription.textContent = "No description!";
+  }
 
   dialogElement.showModal();
 }
 
 hitapi();
-
 
 function addToFavorites(imageSrc, heroname, comics, stories, series, description) {
   const favoriteCharacter = {
@@ -164,21 +162,28 @@ function addToFavorites(imageSrc, heroname, comics, stories, series, description
     comics,
     stories,
     series,
-    description
+    description,
   };
-  
+
   favorites.push(favoriteCharacter);
-  console.log(favorites)
+  console.log("Updated Favorites:", favorites);
 }
+
+function removeFromFavorites(heroname) {
+  favorites = favorites.filter(character => character.heroname !== heroname);
+  console.log("Updated Favorites:", favorites);
+}
+// ... your existing code ...
 
 const getFav = document.querySelector(".favHero");
 const removeHero = document.querySelector(".removeHero");
 
-getFav.addEventListener("click", function(){
+// getFav.addEventListener("click", function () {});
 
-})
-
-removeHero.addEventListener("click",function(){
+removeHero.addEventListener("click", function () {
   const modalNameElement = document.querySelector("#modalName-span");
   const heroname = modalNameElement.textContent;
-})
+  removeFromFavorites(heroname);
+});
+
+// ... your existing code ...

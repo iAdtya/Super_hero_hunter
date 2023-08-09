@@ -120,8 +120,8 @@ dialog::-webkit-scrollbar{
   display: none;
 }
 dialog {
-
   overflow-x:hidden;
+  overflow-y: scroll;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -130,7 +130,7 @@ dialog {
 	background: rgb(255 255 255 / 40%);
   /* max-height: 600px; */
 	/* max-width: 400px; */
-  height: 505px;
+  height: 530px;
   width: 400px;
 	padding-top: 2rem;
 	border-radius: 20px;
@@ -201,7 +201,27 @@ button.primary {
 		opacity: 1;
 	}
 }
+.favHero{
+  margin: 5%;
+  margin-left: 4%;
+  display: inline-block;
+  height: 40px;
+  width: 100px;
+  background-color: #089f6d;
+  cursor: pointer;
+}
+.removeHero{
+  display: inline-block;
+  margin-left: 25%;
+  height: 40px;
+  width: 100px;
+  background-color:red;
+  cursor: pointer;
+}
+
+
 #modalImage{
+  margin-top:-15px;
   height: 300px;
   width: 300px;
   display: flex;

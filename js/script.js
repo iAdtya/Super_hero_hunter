@@ -6,6 +6,7 @@ const hash = CryptoJS.MD5(ts + privateKey + publicKey).toString();
 const apiurl = `http://gateway.marvel.com/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
 // console.log(apiurl);
 let apiurl1;
+let favorites  = []
 let series, stories, comics, description;
 const searchString = document.getElementById("searchResult");
 
@@ -62,7 +63,7 @@ function displayCharacters(characters) {
     const characterImage = characters[i].thumbnail.path;
     const heroname = characters[i].name;
     description = characters[i].description;
-    console.log(description)
+    // console.log(description)
     comics = characters[i].comics.available;
     series = characters[i].series.available;
     stories = characters[i].stories.available;
@@ -113,18 +114,71 @@ function displayModalView(imageSrc, heroname, comics, stories, series, descripti
   const modalSeries = document.querySelector("#modalSeries-span");
   const modalDescription = document.querySelector("#modalDescription-span");
 
-  modalImageElement.src = imageSrc;
-  modalName.textContent = heroname;
-  modalComics.textContent =  comics;
-  modalStories.textContent = stories;
-  modalSeries.textContent =  series;
-  if (description) {
-    modalDescription.textContent = description;
-  } else {
-    modalDescription.textContent = "No description!";
+
+  const parentElement = document.getElementById("dialog");
+
+  // Check if the favourite and remove elements already exist
+  const existingFavourite = parentElement.querySelector(".favHero");
+  const existingRemove = parentElement.querySelector(".removeHero");
+  
+  // If the favourite element does not exist, create and append it
+  if (!existingFavourite) {
+    const favourite = document.createElement("button");
+    favourite.textContent = "Favourite";
+    favourite.classList.add("favHero");
+    favourite.addEventListener("click",function(){
+      addToFavorites(imageSrc,heroname,comics,stories,series,description)
+    });
+    parentElement.appendChild(favourite);
   }
+  
+  // If the remove element does not exist, create and append it
+  if (!existingRemove) {
+    const remove = document.createElement("button");
+    remove.textContent = "Remove"
+    remove.classList.add("removeHero");
+    parentElement.appendChild(remove);
+  }
+  
+    modalImageElement.src = imageSrc;
+    modalName.textContent = heroname;
+    modalComics.textContent =  comics;
+    modalStories.textContent = stories;
+    modalSeries.textContent =  series;
+    if (description) {
+      modalDescription.textContent = description;
+    } else {
+      modalDescription.textContent = "No description!";
+    }
 
   dialogElement.showModal();
 }
 
 hitapi();
+
+
+function addToFavorites(imageSrc, heroname, comics, stories, series, description) {
+  const favoriteCharacter = {
+    imageSrc,
+    heroname,
+    comics,
+    stories,
+    series,
+    description
+  };
+  
+  favorites.push(favoriteCharacter);
+  console.log(favorites)
+}
+
+const getFav = document.querySelector(".favHero");
+const removeHero = document.querySelector(".removeHero");
+
+getFav.addEventListener("click", function(){
+
+})
+
+removeHero.addEventListener("click",function(){
+  const modalNameElement = document.querySelector("#modalName-span");
+  const heroname = modalNameElement.textContent;
+})

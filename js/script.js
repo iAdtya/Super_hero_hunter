@@ -4,29 +4,25 @@ const privateKey = "10b70287677eba0342d98cc0e6a85fcd5e37846c";
 const ts = Date.now();
 const hash = CryptoJS.MD5(ts + privateKey + publicKey).toString();
 const apiurl = `http://gateway.marvel.com/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
-console.log(apiurl)
-
-const searchString = document.getElementById("searchResult");
-const characterImageContainer = document.getElementById("characterImageContainer");
-const dialogElement = document.querySelector("#dialog");
-const modalImageElement = document.querySelector("#modalImage");
-const modalName = document.querySelector("#modalName-span");
-const modalComics = document.querySelector("#modalComics-span");
-const modalStories = document.querySelector("#modalStories-span");
-const modalSeries = document.querySelector("#modalSeries-span");
-const modalDescription = document.querySelector("#modalDescription-span");
-
+// console.log(apiurl);
 let apiurl1;
-let favorites = [];
+let favorites  = []
+let id, series, stories, comics, description;
+const searchString = document.getElementById("searchResult");
 
 searchString.addEventListener("input", function () {
-  hitapi(searchString.value);
+  const searchResultValue = searchString.value;
+  hitapi(searchResultValue);
 });
 
 async function hitapi(textSearch) {
   try {
-    apiurl1 = textSearch ? `http://gateway.marvel.com/v1/public/characters?nameStartsWith=${textSearch}&ts=${ts}&apikey=${publicKey}&hash=${hash}` : apiurl;
-    await fetchData(apiurl1);
+    if (textSearch) {
+      apiurl1 = `http://gateway.marvel.com/v1/public/characters?nameStartsWith=${textSearch}&ts=${ts}&apikey=${publicKey}&hash=${hash}`;
+      await fetchData(apiurl1);
+    } else {
+      await fetchData(apiurl);
+    }
   } catch (error) {
     console.error("Error:", error);
   }
@@ -35,30 +31,55 @@ async function hitapi(textSearch) {
 async function fetchData(apiUrl) {
   try {
     const response = await fetch(apiUrl);
-    const { data } = await response.json();
-    const characters = data.results.slice(0, 20);
+    const data = await response.json();
+    const characters = data.data.results;
 
     clearCharacterImages();
     displayCharacters(characters);
+
+    const characterImageContainer = document.getElementById("characterImageContainer");
+    const imageElements = characterImageContainer.querySelectorAll(".image-card");
+
+    for (let i = 0; i < imageElements.length; i++) {
+      const imageElement = imageElements[i];
+      imageElement.addEventListener("click", function () {
+        const imageSrc = this.src;
+        const heroname = this.nextElementSibling.textContent;
+        const descriptionElement = this.nextElementSibling.nextElementSibling;
+        const description = descriptionElement.textContent;
+        const id = characters[i].id;
+        displayModalView(id, imageSrc, heroname, comics, stories, series, description);
+      });
+    }
   } catch (error) {
     console.error("Error:", error);
   }
 }
-
 function clearCharacterImages() {
+  const characterImageContainer = document.getElementById("characterImageContainer");
   characterImageContainer.innerHTML = "";
 }
 
 function displayCharacters(characters) {
-  characters.forEach((character) => {
-    const {id, thumbnail, name, description, comics, series, stories } = character;
-    const { path, extension } = thumbnail;
+  for (let i = 0; i < 24; i++) {
+    const characterImage = characters[i].thumbnail.path;
+    // console.log(characterImage)
+    const heroname = characters[i].name;
+    description = characters[i].description;
+    // console.log(description)
+    comics = characters[i].comics.available;
+    series = characters[i].series.available;
+    stories = characters[i].stories.available;
+    id = characters[i].id
+    console.log(id)
 
-    if (path.includes("image_not_available") || path.includes("4c00358ec7548") || path.includes("4ce18691cbf04") || path.includes("5232158de5b16")) {
-      return;
+    const exclude = ["image_not_available", "4c00358ec7548"];
+
+    if (exclude.some((image) => characterImage.includes(image))) {
+      continue;
     }
-
-    const fullImagePath = `${path}.${extension}`;
+    const imageExtension = characters[i].thumbnail.extension;
+    const fullImagePath = characterImage + "." + imageExtension;
 
     const characterDiv = document.createElement("div");
     characterDiv.classList.add("character-card");
@@ -69,77 +90,102 @@ function displayCharacters(characters) {
 
     const nameElement = document.createElement("p");
     nameElement.classList.add("imageName");
-    nameElement.textContent = name;
+    nameElement.textContent = heroname;
+
 
     const descriptionElement = document.createElement("p");
     descriptionElement.classList.add("imageDescription");
     descriptionElement.textContent = description;
     descriptionElement.style.display = "none";
 
+
     characterDiv.appendChild(imgElement);
     characterDiv.appendChild(nameElement);
+
     characterDiv.appendChild(descriptionElement);
 
-    characterDiv.addEventListener("click", () => {
-      displayModalView(id,fullImagePath, name, comics.available, stories.available, series.available, description);
-    });
 
+    const characterImageContainer = document.getElementById("characterImageContainer");
     characterImageContainer.appendChild(characterDiv);
-  });
+  }
 }
 
-async function displayModalView(id,imageSrc, heroname, comics, stories, series, description) {
-  const existingFavourite = dialogElement.querySelector(".favHero");
-  const existingRemove = dialogElement.querySelector(".removeHero");
+function displayModalView(id,imageSrc, heroname, comics, stories, series, description) {
+  const dialogElement = document.querySelector("#dialog");
+  const modalImageElement = document.querySelector("#modalImage");
+  const modalName = document.querySelector("#modalName-span");
+  const modalComics = document.querySelector("#modalComics-span");
+  const modalStories = document.querySelector("#modalStories-span");
+  const modalSeries = document.querySelector("#modalSeries-span");
+  const modalDescription = document.querySelector("#modalDescription-span");
+  const modalId = document.querySelector("#charId");
 
+  const parentElement = document.getElementById("dialog");
+
+  // Check if the favourite and remove elements already exist
+  const existingFavourite = parentElement.querySelector(".favHero");
+  const existingRemove = parentElement.querySelector(".removeHero");
+  
+  // If the favourite element does not exist, create and append it
   if (!existingFavourite) {
-    const favourite = createButton("Favourite", "favHero", () => {
-      addToFavorites(id,imageSrc, heroname, comics, stories, series, description);
+    const favourite = document.createElement("button");
+    favourite.textContent = "Favourite";
+    favourite.classList.add("favHero");
+    favourite.addEventListener("click",function(){
+      addToFavorites(imageSrc,heroname,comics,stories,series,description)
     });
-    dialogElement.appendChild(favourite);
+    parentElement.appendChild(favourite);
   }
-
+  
+  // If the remove element does not exist, create and append it
   if (!existingRemove) {
-    const remove = createButton("Remove", "removeHero", () => {
-      removeFromFavorites(id,heroname);
-    });
-    dialogElement.appendChild(remove);
+    const remove = document.createElement("button");
+    remove.textContent = "Remove"
+    remove.classList.add("removeHero");
+    parentElement.appendChild(remove);
   }
+  
+    modalImageElement.src = imageSrc;
+    modalName.textContent = heroname;
+    modalComics.textContent =  comics;
+    modalStories.textContent = stories;
+    modalSeries.textContent =  series;
+    modalId.textContent = id;
+    
+    if (description) {
+      modalDescription.textContent = description;
+    } else {
+      modalDescription.textContent = "No description!";
+    }
 
-  modalImageElement.src = imageSrc;
-  modalName.textContent = heroname;
-  modalComics.textContent = comics;
-  modalStories.textContent = stories;
-  modalSeries.textContent = series;
-  modalDescription.textContent = description || "No description!";
-
-  await new Promise((resolve) => {
-    dialogElement.addEventListener("close", resolve, { once: true });
-    dialogElement.showModal();
-  });
-
-}
-
-function createButton(text, className, onClick) {
-  const button = document.createElement("button");
-  button.textContent = text;
-  button.classList.add(className);
-  button.addEventListener("click", onClick);
-  return button;
-}
-
-function addToFavorites(id,imageSrc, heroname, comics, stories, series, description) {
-  const favoriteCharacter = {id, imageSrc, heroname, comics, stories, series, description };
-  favorites.push(favoriteCharacter);
-  console.log("Updated Favorites:", favorites);
-}
-
-function removeFromFavorites(id) {
-  favorites = favorites.filter((character) => {
-    console.log(`Comparing ${character.id} with ${id}`);
-    return character.id !== id;
-  });
-  console.log("Updated Favorites:", favorites);
+  dialogElement.showModal();
 }
 
 hitapi();
+
+
+function addToFavorites(imageSrc, heroname, comics, stories, series, description) {
+  const favoriteCharacter = {
+    imageSrc,
+    heroname,
+    comics,
+    stories,
+    series,
+    description
+  };
+  
+  favorites.push(favoriteCharacter);
+  console.log(favorites)
+}
+
+const getFav = document.querySelector(".favHero");
+const removeHero = document.querySelector(".removeHero");
+
+getFav.addEventListener("click", function(){
+
+})
+
+removeHero.addEventListener("click",function(){
+  const modalNameElement = document.querySelector("#modalName-span");
+  const heroname = modalNameElement.textContent;
+})

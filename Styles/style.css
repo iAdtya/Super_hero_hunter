@@ -211,6 +211,7 @@ button.primary {
   cursor: pointer;
 }
 .removeHero{
+  
   display: inline-block;
   margin-left: 25%;
   height: 40px;

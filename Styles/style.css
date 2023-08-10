@@ -236,7 +236,7 @@ button.primary {
 }
 /* back ground animation */
 .css-selector {
-  background: linear-gradient(308deg, #2a3030, #15745a, #089f6d);
+  background: linear-gradient(308deg, #84dada, #30ad8c, #17ac7a);
   background-size: 400% 400%;
 
   -webkit-animation: AnimationName 19s ease infinite;

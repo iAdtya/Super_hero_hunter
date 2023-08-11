@@ -6,22 +6,24 @@
 
 #Favourites {
   height: 45px;
-  width: 100px;
-  cursor: pointer;
-  background-color: #d87171;
-  margin-right: 11%;
   border-radius: 20px;
   text-align: center;
+  width: 122px;
+  cursor: pointer;
+  background-color: #d87171;
+  margin-right: 80px;
 }
-a{
+a {
   text-decoration: none;
 }
+
 .heading {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   margin-bottom: 5%;
-  margin-left: 45%;
+}
+
+.nav-img {
+  height: 100px;
+  margin-left: 50px;
 }
 
 .heading-container {
@@ -31,11 +33,12 @@ a{
   margin-top: 5%;
 }
 
-#Favourites{
-  width: 100px;
-  cursor: pointer;
-  background-color: #d87171;
+@media (max-width: 600px) {
+  .nav-img {
+    height: 30px;
+  }
 }
+
 body::-webkit-scrollbar{
   display: none;
 }
@@ -58,6 +61,8 @@ input {
 button {
   width: 40px;
   cursor: pointer;
+  font-style: italic;
+  font-size: medium;
 }
 .character-card{
   --card-bg: rgba(24, 24, 24, 0.486);

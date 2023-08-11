@@ -10,8 +10,12 @@
   cursor: pointer;
   background-color: #d87171;
   margin-right: 11%;
+  border-radius: 20px;
+  text-align: center;
 }
-
+a{
+  text-decoration: none;
+}
 .heading {
   display: flex;
   flex-direction: column;

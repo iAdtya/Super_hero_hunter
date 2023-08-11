@@ -7,13 +7,10 @@
     <!-- <link rel="stylesheet" href="js/script2.js" /> -->
   </head>
   <body>
-    <h1>Your Favourite Supper-Heroes ❤️</h1>
+    <h1><a href="./index.html">Your Favourite Supper-Heroes ❤️</a></h1>
     <main class="wrapper">
       <div id="characterImageContainer" class="container"></div>
-
-      <!-- modal section -->
       <button class="primary" onclick="window.dialog.showModal();">
-        <!-- Open Dialog -->
       </button>
       <dialog id="dialog">
         <button onclick="window.dialog.close();" aria-label="close" class="x">
@@ -25,7 +22,6 @@
         <p id="modalStories">Stories: <span id="modalStories-span"></span></p>
         <p id="modalSeries">Series: <span id="modalSeries-span"></span></p>
         <p id="modalDescription">Description: <span id="modalDescription-span"></span></p>
-        <!-- <p id="modalId">Id: <span id="charId"></span></p> -->
         <button class="favHero">Favourites</button>
         <button class="removeHero">removeHero</button>
       </dialog>
@@ -33,4 +29,3 @@
     <script src="js/favorites.js"></script>
   </body>
 </html>
-

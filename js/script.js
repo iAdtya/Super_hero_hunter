@@ -51,7 +51,7 @@ function clearCharacterImages() {
 function displayCharacters(characters) {
   characters.forEach(character => {
     const { thumbnail, name, description, comics, series, stories, id } = character;
-    if (!thumbnail.path.includes("image_not_available") && !thumbnail.path.includes("4c00358ec7548")) {
+    if (!thumbnail.path.includes("image_not_available") && !thumbnail.path.includes("4c00358ec7548") && !thumbnail.path.includes("4ce18691cbf04") && !thumbnail.path.includes("535fecbbb9784") ) {
       const imageExtension = thumbnail.extension;
       const fullImagePath = `${thumbnail.path}.${imageExtension}`;
       
@@ -120,7 +120,6 @@ function addtofavorites(id, imageSrc, heroname, comics, stories, series, descrip
   }
 }
 
-
 function removefromfavorites(id) {
   let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
   let index = favorites.findIndex(fav => fav.id === id);
@@ -136,6 +135,11 @@ function removefromfavorites(id) {
 }
 
 hitapi();
-
 const getfavHero = document.querySelector(".favHero")
 const getremoveHero = document.querySelector(".removeHero")
+
+// const nextpage = document.getElementById("Favourites")
+
+// nextpage.addEventListener("click",function(){
+//   console.log("clicked")
+// })

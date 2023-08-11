@@ -2,7 +2,7 @@ const publicKey = "1f0bcb9b187fc93f847f1cafd9f85468";
 const privateKey = "10b70287677eba0342d98cc0e6a85fcd5e37846c";
 const ts = Date.now();
 const hash = CryptoJS.MD5(ts + privateKey + publicKey).toString();
-const apiurl = `http://gateway.marvel.com/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
+const apiurl = `https://gateway.marvel.com/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
 
 const searchString = document.getElementById("searchResult");
 const characterImageContainer = document.getElementById("characterImageContainer");
@@ -23,7 +23,7 @@ searchString.addEventListener("input", async function () {
 async function hitapi(textSearch) {
   try {
     const apiUrl = textSearch ? 
-      `http://gateway.marvel.com/v1/public/characters?nameStartsWith=${textSearch}&ts=${ts}&apikey=${publicKey}&hash=${hash}` : 
+      `https://gateway.marvel.com/v1/public/characters?nameStartsWith=${textSearch}&ts=${ts}&apikey=${publicKey}&hash=${hash}` : 
       apiurl;
     const data = await fetchData(apiUrl);
     

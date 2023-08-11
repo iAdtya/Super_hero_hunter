@@ -13,8 +13,30 @@ h1{
     box-shadow: 0px 0px 10px #7e4d08; /* Add box shadow to h1 element */
 }
 .wrapper{
-    height: 70%;
-    width: 60%;
+    height: 75%;
+    width: 80%;
     background-color: #FFECD1; 
     box-shadow: 0px 0px 10px #7e4d08; /* Add box shadow to .wrapper element */
+    overflow-y: scroll;
+}
+.wrapper::-webkit-scrollbar{
+  display: none;
+}
+/*  */
+.superhero {
+  display: flex;
+  align-items: center;
+}
+
+.superhero-image {
+  width: 100px;
+  height: 100px;
+}
+
+.superhero-name {
+  margin-left: 20px;
+}
+
+.remove-button {
+  margin-left: auto;
 }

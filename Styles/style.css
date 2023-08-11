@@ -213,14 +213,12 @@ button.primary {
 .removeHero{
   
   display: inline-block;
-  margin-left: 25%;
+  margin-left: 20%;
   height: 40px;
   width: 100px;
   background-color:red;
   cursor: pointer;
 }
-
-
 #modalImage{
   margin-top:-15px;
   height: 300px;

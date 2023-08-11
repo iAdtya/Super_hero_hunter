@@ -17,9 +17,9 @@ a {
   text-decoration: none;
 }
 
-.heading {
+/* .heading {
   margin-bottom: 5%;
-}
+} */
 
 .nav-img {
   height: 100px;
@@ -30,7 +30,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 5%;
+
 }
 
 @media (max-width: 600px) {
